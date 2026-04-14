@@ -8,7 +8,7 @@ st.write("성과 데이터를 입력하면 기간별 맞춤 브리핑 문구가 
 # 입력 섹션
 with st.sidebar:
     st.header("⚙️ 설정 및 데이터 입력")
-    client = st.text_input("광고주명", "아이카")
+    client = st.text_input("광고주명", "업체명")
     
     # 기간 선택 기능 추가
     period = st.selectbox("보고 기간 선택", ["일일 (Yesterday)", "주간 (Last 7 Days)", "월간 (Last Month)"])
