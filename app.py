@@ -1,50 +1,53 @@
 import streamlit as st
 
-st.set_page_config(page_title="AE 실전 문구 생성기", page_icon="📱")
+st.set_page_config(page_title="광고 성과 브리핑 자동화 툴", page_icon="📊")
 
-st.title("📱 AE 실전 브리핑 문구 생성기")
-st.write("실제로 광고주 카톡/메일에 바로 복사해서 쓸 수 있는 문구입니다.")
+st.title("📊 광고 성과 브리핑 자동화 툴")
+st.write("성과 데이터를 입력하면 기간별 맞춤 브리핑 문구가 생성됩니다.")
 
 # 입력 섹션
 with st.sidebar:
-    st.header("📊 데이터 입력")
+    st.header("⚙️ 설정 및 데이터 입력")
     client = st.text_input("광고주명", "아이카")
-    spend = st.number_input("지출액", value=150000, step=1000)
-    roas = st.number_input("ROAS (%)", value=320, step=10)
-    cpc = st.number_input("CPC (원)", value=450, step=10)
+    
+    # 기간 선택 기능 추가
+    period = st.selectbox("보고 기간 선택", ["일일 (Yesterday)", "주간 (Last 7 Days)", "월간 (Last Month)"])
     
     st.divider()
-    mode = st.radio("문구 스타일 선택", ["격식 보고형", "캐주얼 카톡형", "성과 부진(방어)형"])
+    
+    spend = st.number_input(f"{period} 지출액 (원)", value=150000, step=1000)
+    roas = st.number_input(f"{period} ROAS (%)", value=320, step=10)
+    cpc = st.number_input(f"{period} CPC (원)", value=450, step=10)
+    
+    st.divider()
+    mode = st.radio("문구 스타일", ["격식 보고형", "캐주얼 카톡형"])
 
-st.subheader(f"✨ [{mode}] 생성 결과")
+st.subheader(f"✨ [{period} / {mode}] 브리핑 결과")
+
+# 기간별 명칭 설정
+period_label = "어제자" if "일일" in period else "지난 한 주간" if "주간" in period else "지난 한 달간"
 
 # 문구 로직
 if mode == "격식 보고형":
-    msg = f"""[일일 성과 브리핑] - {client}
+    msg = f"""[성과 브리핑] - {client} ({period})
     
-안녕하세요, {client} 담당 AE입니다. 어제자 성과 요약 공유드립니다.
+안녕하세요, {client} 담당 AE입니다. {period_label} 성과 요약 공유드립니다.
 
-- 지출액: {format(spend, ',')}원
-- ROAS: {roas}%
-- CPC: {cpc}원
+- 총 지출액: {format(spend, ',')}원
+- 평균 ROAS: {roas}%
+- 평균 CPC: {cpc}원
 
-어제는 목표 ROAS 내에서 안정적으로 운영되었습니다. 클릭당 비용(CPC)도 적정 수준 유지 중이며, 금일 오전 중으로 소재별 효율 다시 체크하여 특이사항 있을 시 공유드리겠습니다."""
-
-elif mode == "캐주얼 카톡형":
-    msg = f"""{client} 대표님 안녕하세요! 
-    
-어제 성과 지표 전달드립니다. 😊
-비용 {format(spend, ',')}원 지출되었고, ROAS는 {roas}%로 마감됐습니다!
-
-CPC도 {cpc}원대로 잘 방어되고 있어서 현재 세팅 그대로 유지하면서 효율 계속 모니터링하겠습니다. 오늘 하루도 화이팅하세요!"""
+{period_label} 성과를 검토한 결과, 전반적으로 목표 수치 내에서 안정적인 흐름을 보이고 있습니다. 세부 지표 분석을 통해 최적화 작업을 지속 진행하겠습니다."""
 
 else:
-    msg = f"""안녕하세요 {client}님, 어제자 성과 공유드립니다.
+    msg = f"""{client} 대표님 안녕하세요! 
+    
+{period_label} 성과 정리해서 전달드립니다. 😊
 
-- 지출액: {format(spend, ',')}원
-- ROAS: {roas}%
+{period_label} 지출은 {format(spend, ',')}원, ROAS는 {roas}%로 마감되었습니다! 
+CPC도 {cpc}원 수준으로 잘 유지되고 있어, 현재 효율 좋은 소재 위주로 예산 집중하며 운영 중입니다. 
 
-어제는 전일 대비 ROAS가 다소 정체된 모습이 보입니다. 소재 피로도가 올라간 것으로 판단되어, 오늘 중으로 신규 소재 교체 및 타겟 조정을 검토할 예정입니다. 분석 결과 나오는 대로 다시 보고드리겠습니다."""
+데이터 확인해 보시고 궁금하신 점은 언제든 말씀해 주세요!"""
 
 st.code(msg, language="text")
-st.info("위 박스 오른쪽의 복사 버튼을 눌러 바로 사용하세요!")
+st.info("복사 버튼을 눌러 광고주님께 바로 전달하세요!")
